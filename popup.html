@@ -1,0 +1,43 @@
+// popup.html
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .answer {
+        padding: 10px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="question" rows="5" cols="30"></textarea>
+    <br>
+    <button id="search">Search</button>
+    <div class="answer" id="answer"></div>
+
+    <script>
+      const searchBtn = document.querySelector('#search');
+      const questionInput = document.querySelector('#question');
+      const answerDiv = document.querySelector('#answer');
+
+      searchBtn.addEventListener('click', async () => {
+        const question = questionInput.value;
+        const response = await fetch('https://api.openai.com/v1/engines/text-davinci-002/jobs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer <API_KEY>'
+          },
+          body: JSON.stringify({ prompt: question })
+        });
+
+        const json = await response.json();
+        const answer = json.choices[0].text;
+
+        answerDiv.innerText = answer;
+      });
+    </script>
+  </body>
+</html>
